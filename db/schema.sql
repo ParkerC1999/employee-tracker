@@ -1,3 +1,7 @@
+DROP DATABASE IF EXISTS tracker;
+CREATE DATABASE tracker;
+USE tracker;
+
 DROP TABLE IF EXISTS department;
 DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS employees;

@@ -1,8 +1,5 @@
 const inquirer = require('inquirer');
-const db = require('./db/connection');
-const Department = require('./functions/department');
-const Role = require('./functions/role');
-const Update = require('./functions/update');
+const database = require('./db');
 
 const info = () => {
     return inquirer.prompt([
@@ -10,10 +7,14 @@ const info = () => {
             type: 'list',
             name: 'options',
             message: 'What would you like to do?',
-            choices: ['View all departments', 'View all all roles', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role']
+            choices: ['View all departments', 'View all all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role']
         }
     ])
 }
+
+// const updateRole = () => {
+    
+// }
 
 // const next = () => {
 //     return inquirer.prompt([
@@ -26,18 +27,13 @@ const info = () => {
 //     ])
 // }
 
-db.connect(err => {
-    // console.log("stuff");
-    if (err) throw err;
-    console.log('Database connected.')
-});
-
 info()
     .then((answers) => {
         // console.log(answers);
         if (answers.options === 'View all departments') {
-            var department = new Department(db);
-            department.viewDepartments();
+            // console.log(Database);
+            database.viewDepartments();
+            info();
         }
         if (answers.options === 'Add a department') {
             inquirer.prompt([
@@ -47,20 +43,21 @@ info()
                     message: 'Write the name of the department you would like to add.',
                 }
             ]).then(answer => {
-                var department = new Department(db);
-                department.addDepartment(answer.department);
+                database.addDepartment(answer.department);
             })
         }
         if (answers.options === 'View all all roles') {
-            var role = new Role(db);
-            role.viewRoles();
+            database.viewRoles();
         }
         if (answers.options === 'Add a role') {
             // add prompts
         }
         if (answers.options === 'Update an employee role') {
-            var newUpdate = new Update(db);
-            newUpdate.updateEmployee();
+            database.updateEmployee();
+        }
+        if (answers.options === 'View all employees') {
+            database.viewEmployees();
+            
         }
         if (answers.options === 'Add an employee') {
             // add promts
