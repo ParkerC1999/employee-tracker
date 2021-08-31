@@ -1,37 +1,23 @@
 const index = require('../index');
 const connect = require('./connection');
 require('console.table');
+const inquirer = require('inquirer');
+const info = require('../index');
 
 class Database {
     constructor(connect) {
         this.connect = connect
     }
     viewEmployees() {
-        this.connect.query('SELECT * FROM employees;', (err, rows) => {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            console.table(rows);
-        });
+        return this.connect.promise().query('SELECT * FROM employees;')
+        
     }
     viewRoles() {
-        this.connect.query('SELECT * FROM roles;', (err, rows) => {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            console.table(rows);
-        });
+        return this.connect.promise().query('SELECT * FROM roles;')
     }
     viewDepartments() {
-        this.connect.query('SELECT * FROM department;', (err, rows) => {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            console.table(rows);
-        });
+        return this.connect.promise().query('SELECT * FROM department;')
+        
     }
     addDepartment(department) {
         this.connect.query('INSERT INTO department SET ?;', { name: department }, (err, rows) => {
@@ -43,6 +29,12 @@ class Database {
         })
     }
     updateEmployee() {
+        let roles = [];
+        this.connect.query('SELECT * FROM roles', (err, rows) => {
+            for (let i = 0; i < rows.length; i++) {
+                roles.push(rows[i].id + ',' + rows[i].name)
+            }
+        });
         this.connect.query('SELECT * FROM employees;', (err, rows) => {
             // console.log(rows);
             var choiceArray = [];
@@ -67,6 +59,7 @@ class Database {
                         name: title,
                         value: id
                     }));
+                    
                     inquirer.prompt([
                         {
                             type: 'list',
